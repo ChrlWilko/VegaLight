@@ -10,18 +10,30 @@
 
 
     <!-- CSS file -->
-    <link rel="stylesheet" type="text/css" href="css/styles.css" media="all">
+    <link rel="stylesheet" type="text/css" href="css/styles.css">
 
 </head>
 
 <body>
 
-    <div id="vic_localities"></div>
+    <h1>Melbource Housing Prices</h1>
+    <div class="container">
+        <div id="vic_localities" class="graph"></div>
+    </div>
+    <div class="container">
+        <div id="price_and_area" class="graph"></div>
+    </div>
 
     <script type="text/javascript">
 
-        var spec2 = "js/vic_localities.vg.json";
+        var spec2 = "https://raw.githubusercontent.com/ChrlWilko/VegaLight/main/js/vic_localities.vg.json";
+        var spec3 = "https://raw.githubusercontent.com/ChrlWilko/VegaLight/main/js/price_and_area.vg.json";
+
         vegaEmbed('#vic_localities', spec2).then(function (result) {
+            // Access the Vega view instance (https://vega.github.io/vega/docs/api/view/) as result.view
+        }).catch(console.error);
+
+        vegaEmbed('#price_and_area', spec3).then(function (result) {
             // Access the Vega view instance (https://vega.github.io/vega/docs/api/view/) as result.view
         }).catch(console.error);
     </script>
