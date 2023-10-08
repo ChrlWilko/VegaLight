@@ -1,22 +1,26 @@
-#vic_localities {
-	top:100px;
-	bottom: 100px; 
-	left: 100px;
-	right: 100px;
-    border: 100px;
-    border-bottom: 100px;
-	/*height: 1000px;
-	width: 800px;*/
+
+body{
+    background-color: burlywood;
+}
+
+h1{
+    text-align: center;
+    color: cadetblue;
+}
+
+.container {
+    margin: 20px;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+    object-fit: cover;
 }
 
 .graph {
-    background-color: rebeccapurple;
-    border: 100px;
-    border-bottom: 100px;
-}
-
-div {
-	background-color: rebeccapurple;
-    	border: 100px;
-    	border-bottom: 100px;
+    margin: 0 auto;
+    width: fit-content;
+    height: fit-content;
+    text-align: center;
+    background-color: cadetblue;
+    padding: 20px;
 }
