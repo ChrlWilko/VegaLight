@@ -46,8 +46,8 @@
           "longitude": {"field": "average_longitude", "type": "quantitative"},
           "color": {"field": "Average Price", "type": "quantitative", "scale": {"scheme": "viridis", "domain":[0,2500000]}},
           "tooltip": [
-            {"field": "Suburb", "type": "nominal", "title": "Suburb:"},
-            {"field": "Average Price", "type": "quantitative", "title": "Average Price:", "format": "$,.2f"}
+            {"field": "Suburb", "type": "nominal", "title": "Suburb"},
+            {"field": "Average Price", "type": "quantitative", "title": "Average Price", "format": "$,.2f"}
           ]
         }
       }
