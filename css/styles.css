@@ -3,6 +3,14 @@
 	bottom: 100px; 
 	left: 100px;
 	right: 100px;
+    border: 100px;
+    border-bottom: 100px;
 	/*height: 1000px;
 	width: 800px;*/
+}
+
+graph {
+    background-color: rebeccapurple;
+    border: 100px;
+    border-bottom: 100px;
 }
