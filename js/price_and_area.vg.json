@@ -1,0 +1,114 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "width": 600,
+  "height": 450,
+  "title": "Average Price and Building Area by Unit Type over the Year",
+  "data": {
+    "url": "https://raw.githubusercontent.com/ChrlWilko/VegaLight/main/melbourne_housing_refined.csv",
+    "format": {"type": "csv"}
+  },
+  "transform": [
+    {"filter": "datum.BuildingArea >= 1 && datum.BuildingArea <= 700"},
+    {"filter": "toDate(datum.Date)"},
+    {"timeUnit": "month", "field": "Date", "as": "month"},
+    {
+      "aggregate": [
+        {"op": "average", "field": "Price", "as": "average_price"},
+        {
+          "op": "average",
+          "field": "BuildingArea",
+          "as": "average_building_area"
+        }
+      ],
+      "groupby": ["month", "Type"]
+    },
+    {
+      "calculate": "format(datum.average_building_area, '.0f') + ' sqm'",
+      "as": "tooltip_building_area"
+    }
+  ],
+  
+  "encoding": {
+    "x": {"field": "month", "type": "temporal", "axis": {"title": "Date"}},
+    "y": {
+      "field": "average_price",
+      "type": "quantitative",
+      "axis": {"title": "Average Price ($)"},
+      "scale": {"domain": [400000, 1500000]}
+    }
+  },
+  "layer": [
+    {
+      "mark": {"type": "circle", "filled": true},
+      "selection": {
+        "type_highlight": {
+          "type": "multi", 
+          "fields": ["Type"], 
+          "bind": "legend"}
+        },
+      "encoding": {
+        "size": {
+          "field": "average_building_area",
+          "type": "quantitative",
+          "scale": {"range": [150, 1000]},
+          "axis": {"title": "Average Building Area (sqm)"}
+        },
+        "color": {
+          "field": "Type",
+          "type": "nominal",
+          "scale": {"scheme": "category10"}
+        },
+        "opacity": {
+          "condition": {"selection": "type_highlight", "value": 0.8},
+          "value": 0.2
+        },
+        "tooltip": [
+          {
+            "field": "tooltip_building_area",
+            "type": "nominal",
+            "title": "Average Building Area"
+          },
+          {
+            "field": "average_price",
+            "type": "quantitative",
+            "title": "Average Price",
+            "format": "$,.0f"
+          },
+          {"field": "Type", "type": "nominal", "title": "Unit Type"}
+        ]
+      }
+    },
+    {
+      "mark": {
+        "type": "text",
+        "align": "right",
+        "baseline": "middle",
+        "dx": -12,
+        "fontSize": 11.5,
+        "fontStyle": "italic"
+      },
+      "encoding": {
+        "text": {"field": "Type", "type": "nominal"},
+        "color": {"value": "black"},
+        "opacity": {
+          "condition": {"test": "datum['Type'] == 'House' || datum['Type'] == 'Townhouse'|| datum['Type'] == 'Unit'"},
+          "value": 0
+        },
+        "tooltip": [
+          {
+            "field": "tooltip_building_area",
+            "type": "nominal",
+            "title": "Average Building Area"
+          },
+          {
+            "field": "average_price",
+            "type": "quantitative",
+            "title": "Average Price",
+            "format": "$,.0f"
+          },
+          {"field": "Type", "type": "nominal", "title": "Unit Type"}
+        ]
+      }
+    }
+  ]
+}
