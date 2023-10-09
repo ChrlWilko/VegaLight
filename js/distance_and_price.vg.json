@@ -1,0 +1,104 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "width": 600,
+  "height": 450,
+  "description": "A scatter plot with tooltips",
+  "data": {
+    "url": "https://raw.githubusercontent.com/ChrlWilko/VegaLight/main/melbourne_housing_refined.csv"
+  },
+  "transform": [
+    {"filter": "toDate(datum.Date)"},
+    {
+      "calculate": "format(datum.Distance, '.1f') + ' km'",
+      "as": "DistanceLabel"
+    }
+  
+  ],
+  "encoding": {
+    "x": {"field": "Distance", "type": "quantitative"},
+    "y": {"field": "Price", "type": "quantitative", "aggregate": "average", }
+  },
+  "layer": [
+    {
+      "mark": {"type": "circle", "filled": true, "size": 60},
+      "selection": {
+        "type_highlight": {
+          "type": "multi", 
+          "fields": ["Type"], 
+          "bind": "legend"
+          }
+        },
+      "encoding": {
+        "size": {
+          "condition": {
+            "test": "datum['Suburb'] == 'Clayton' || datum['Suburb'] == 'Middle Park' || datum['Suburb'] == 'Gisborne'"
+          },
+          "value": 10
+        },
+        "color": {"field": "Type", "type": "nominal"},
+
+        "opacity": {
+          "condition": {
+            "selection": "type_highlight",
+                        "test": "indexof(['Clayton', 'Middle Park', 'Gisborne'], datum['Suburb']) > -1",
+
+           "value": 0.8},
+          "value": 0
+        },
+        "tooltip": [
+          {"field": "Suburb", "type": "nominal"},
+          {
+            "field": "DistanceLabel",
+            "title": "Distance",
+            "type": "nominal"
+          },
+          {
+            "field": "Price",
+            "type": "quantitative",
+            "aggregate": "average",
+            "format": "$,.0f"
+          },
+          {"field": "Type", "type": "nominal"}
+        ]
+      }
+    },
+    {
+      "mark": {
+        "type": "text",
+        "align": "left",
+        "baseline": "line-bottom",
+        "dx": 10,
+        "fontSize": 15,
+        "fontStyle": "italic"
+      },
+      "encoding": {
+        "text": {
+           "field": "Suburb", "type": "nominal"},
+        "color": {"value": "black"},
+        "opacity": {
+          "condition": {
+            "test": "datum['Suburb'] == 'Clayton' || datum['Suburb'] == 'Middle Park' || datum['Suburb'] == 'Gisborne'",
+        
+           "value": 0.8
+           },
+          "value": 0
+        },
+        "tooltip": [
+          {"field": "Suburb", "type": "nominal"},
+          {
+            "field": "DistanceLabel",
+            "title": "Distance",
+            "type": "nominal"
+          },
+          {
+            "field": "Price",
+            "type": "quantitative",
+            "aggregate": "average",
+            "format": "$,.0f"
+          },
+          {"field": "Type", "type": "nominal", "title": "Unit Type"}
+        ]
+      }
+    }
+  ]
+}
