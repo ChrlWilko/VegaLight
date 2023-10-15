@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    <!-- Import Vega & Vega-Lite (does not have to be from CDN) -->
+    <script src="https://cdn.jsdelivr.net/npm/vega@5.20.2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-lite@5.1.0"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-embed@6.17.0"></script>
+
+
+    <!-- CSS file -->
+    <link rel="stylesheet" type="text/css" href="css/styles.css">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/purecss@3.0.0/build/pure-min.css"
+        integrity="sha384-X38yfunGUhNzHpBaEBsWLO+A0HDYOQi8ufWDkZ0k9e0eXz/tH3II7uKZ9msv++Ls" crossorigin="anonymous">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/purecss@3.0.0/build/grids-responsive-min.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Mukta&family=Young+Serif&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        body {
+            background-image: url('data/01-03_City_map2v_generated.jpg');/ background-size: cover;
+            background-repeat: repeat;
+        }
+    </style>
+
+
+</head>
+
+<body>
+    <div id="heading page" class="page">
+        <div class="pure-g">
+            <h1><u>Melbourne Housing Data (2016-2017)</u></h1>
+            <h3> An in-depth look at the behaviour of the Melbourne housing market and the fluctuations across
+                suburbs in pricing, house size and real estate agencies.</h3>
+        </div>
+    </div>
+    <div id="map page" class="page">
+        <div class="pure-g">
+            <div class="pure-u-1-3">
+                <h2>Prices Across the Suburbs</h2>
+                <p>
+                    The map to right displays the median property prices for each suburb, highlighting the changes
+                    of
+                    value across the
+                    Greater Melbourne area. As made evident in the graphic, properties to the east of the CBD (red
+                    circle) generally
+                    have a higher median price. The suburbs surrounding the bay also have recorded higher median
+                    prices
+                    compared
+                    to northern and western suburbs. This comes as no surprise, due to Australians obsession with
+                    the
+                    beach and over
+                    85% of our population living less than 1 hour from a beach (Wheeler, 2010); every street closer
+                    to
+                    the beach is a step in right direction.
+                    <br>
+                    <br>
+                    The most expensive suburb was <strong>Kooyong</strong>, just to the east of the CBD with a
+                    median
+                    property price of <span style="color: green;">$3,080,000</span>.
+                    <br>
+                    The most affordable suburb was <strong>Kurunjang</strong> in the west, hosting a median property
+                    price of <span style="color: green;">$362,000</span>.
+                </p>
+            </div>
+            <div id="vic_localities" class="pure-u-2-3">
+            </div>
+        </div>
+    </div>
+    <div id="line and bar page" class="page">
+        <div id="line chart" class="pure-g">
+            <div id="propertiessold_time" class="pure-u-2-3">
+            </div>
+            <div class="pure-u-1-3">
+                <h2>Seasonal Buying Patterns</h2>
+                <p> There are many factors that go into when a person will decide to buy property, and the
+                    time of year is a crucial aspect that is rarely overlooked. The best time of year to buy
+                    is not set in stone, with many people suggesting that spring or autumn time provide the
+                    best opportunities (Inovayt, 2022). However, in Melbourne, this assumption does not
+                    necessarily hold true, with the greatest number of properties being sold between <span
+                        style="color: rgb(255, 0, 149);">May</span> through
+                    <span style="color: rgb(255, 0, 149);">July</span>.
+
+
+                </p>
+            </div>
+        </div>
+        <div class="pure-u-1">
+            <h5>*January data not available.</h5>
+        </div>
+        <div id="bar chart" class="pure-g">
+            <div id="realestateagency_count" class="pure-u-2-3"></div>
+
+            <div class="pure-u-1-3">
+                <h2>Most Prominent Real Estate Agencies</h2>
+                <p> In Melbourne there are over 400 different real estate agencies (Domain, 2016) all competing for the
+                    sale of homes. Some
+                    of these agencies are more profound and take up a larger share of the housing market. These agencies
+                    also have holds
+                    on certain regions and suburbs of Melbourne. As seen in the graphic to the right, the agency
+                    <span style="color: purple;">Nelson</span> maintain the greatest total number of properties sold
+                    across Melbourne,
+                    however, in the suburb of Albert Park they rank as the lowest seller.
+                </p>
+            </div>
+        </div>
+    </div>
+    <div id="stacked bar and scatter page" class="page">
+        <div class="pure-g">
+            <div class="pure-u-1">
+                <h2> Property Types Effect on the Number of Bedrooms, Price and Proximity to CBD over the Decades</h2>
+                <p>The three main property categories in Australia are <span
+                        style="color: rgb(43, 68, 96);">houses</span>,
+                    townhouses and units. <span style="color: rgb(43, 68, 96);">Houses</span> are generally identified
+                    as
+                    seperated dwellings that come in all shapes and sizes. <span
+                        style="color: rgb(43, 68, 96);">Houses</span>
+                    are very popular in Australia, affording residents with privacy and flexibilty. A
+                    <span style="color: rgb(245, 133, 24);">townhouses</span> is a multi-level building that allows
+                    people to
+                    own a house on a strata title; which means they own the building but share the land with others.
+                    <span style="color: rgb(228, 87, 86);">Units</span> or apartments are self-contained living areas
+                    that are part
+                    of a larger building consisting of other units. (Realestate.com, 2022)
+                    <br>
+                    Most properties in Melbourne have between 2-4 bedrooms as the standard, with <span
+                        style="color: rgb(228, 87, 86);">units</span>
+                    generally having fewer and <span style="color: rgb(43, 68, 96);">houses</span> containing more.
+                    Prior to the 1960's
+                    most properties built were <span style="color: rgb(43, 68, 96);">houses</span>, but during the 60's
+                    and 70's, a
+                    boom in <span style="color: rgb(228, 87, 86);">units</span> being built can be seen. <span
+                        style="color: rgb(245, 133, 24);">Townhouses</span>
+                    only really began being built in larger numbers in the late 90's and early 2000's.
+                    <br>
+                    In the scatterplot below, the distance of a property is measured in kilometres from the Melbourne
+                    CBD.
+                    Unsurprisingly, <span style="color: rgb(228, 87, 86);">units</span> take up a large amount of the
+                    area in the bottom left of the graphic,
+                    showing their abundance in proximity to the city and greater affordability. <span
+                        style="color: rgb(245, 133, 24);">Townhouses</span>
+                    generally are seen a bit further from the city with a slight jump in price as well.
+                    <br>
+                    <span style="color: rgb(43, 68, 96);">Houses</span>
+                    demonstrate the greatest range and number, with a strong correlation between distance and price. The
+                    median price of living in a
+                    <span style="color: rgb(43, 68, 96);">house</span> 3.0 km from the CBD in Middle Park, is $5.6
+                    million. Comparatively,
+                    the furthest distance from the CBD, 45.9 km in the suburb Gisborne,
+                    has a median <span style="color: rgb(43, 68, 96);">house</span> price of $775,000.
+
+
+                </p>
+            </div>
+        </div>
+        <div class="pure-g">
+            <div id="combined_bar_scatter" class="pure-u-1 center"></div>
+        </div>
+    </div>
+    <div class="refrences">
+        <h4>References:</h4>
+        <h6>
+            1. Wheeler, D. (2010). Shore thing: Australia’s beach obsession. <a
+                href="https://www.bbc.com/travel/article/20101104-shore-thing-australias-beach-obsession">BBC
+                Travel</a>.
+            <br>
+            2. Inovayt. (2022). When is the best time to buy property? <a
+                href="https://www.inovayt.com.au/when-is-the-best-time-to-buy-property/#:~:text=When%20is%20the%20best%20time%2C%20seasonally%3F">Inovayt</a>.
+            <br>
+            3. Domain. (2016). Real estate agencies active in Melbourne. <a
+                href="https://www.domain.com.au/real-estate-agencies/melbourne-vic-3000/">Domain.com.au</a>.
+            <br>
+            4. Realestate.com. (2022). Townhouse vs house vs apartment: which is a better investment? <a
+                href="https://www.realestate.com.au/advice/townhouse-vs-house-vs-apartment-which-is-a-better-investment/">Realestate.com</a>.
+            <br>
+            <br>
+            Data sourced from: <a href="https://www.kaggle.com/datasets/peterkmutua/housing-dataset"> Kaggle - Housing
+                Dataset</a>
+            <br>
+            Attribution for background image: <a href="https://www.vecteezy.com/">Vecteezy.com</a>
+        </h6>
+        <h6 style="text-align: end;">
+            This work is licensed under a Creative Commons Attribution 4.0 International License.
+        </h6>
+    </div>
+
+
+    <script type="text/javascript">
+
+        // https://raw.githubusercontent.com/ChrlWilko/VegaLight/main/
+
+        var map = "js/vic_localities.vg.json";
+        var g1 = "js/distance_and_price.vg.json";
+        var g2 = "js/realestateagency_count.vg.json";
+        var g3 = "js/rooms_stackedbar.vg.json";
+        var g4 = "js/propertiessold_time.vg.json";
+        var g5 = "js/combined_bar_scatter.vg.json"
+
+
+        vegaEmbed('#vic_localities', map, { renderer: "svg", actions: false }).then(function (result) {
+            var svg = result.view.container();
+            var backgroundElement = svg.querySelector('.background');
+            if (backgroundElement) {
+                backgroundElement.style.fill = 'lightblue';
+            }
+        }).catch(console.error);
+
+        vegaEmbed('#distance_and_price', g1, { renderer: "svg", actions: false }).then(function (result) {
+        }).catch(console.error);
+
+        vegaEmbed('#realestateagency_count', g2, { renderer: "svg", actions: false }).then(function (result) {
+        }).catch(console.error);
+
+        vegaEmbed('#rooms_stackedbar', g3, { renderer: "svg", actions: false }).then(function (result) {
+        }).catch(console.error);
+
+        vegaEmbed('#propertiessold_time', g4, { renderer: "svg", actions: false }).then(function (result) {
+        }).catch(console.error);
+
+        vegaEmbed('#combined_bar_scatter', g5, { renderer: "svg", actions: false }).then(function (result) {
+        }).catch(console.error);
+
+
+
+
+    </script>
+
+</body>
+
+</html>
