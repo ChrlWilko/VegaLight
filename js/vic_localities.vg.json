@@ -1,7 +1,6 @@
 {
   "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
-  "title": "Median house price per suburb",
-  "width": 450,
+  "width": "container",
   "height": 400,
   "params": [
     {
@@ -17,7 +16,7 @@
     },
     {
       "name": "center_to",
-      "value": [145, -37.95],
+      "value": [144.9623, -37.8124],
       "bind": {
         "input": "select",
         "options": [
@@ -88,20 +87,33 @@
         "shape": {"field": "geo", "type": "geojson"},
         "color": {
           "field": "Price",
+          "aggregate": "median",
           "type": "quantitative",
-          "title": "Price",
-          "scale": {"domain": [400000, 2000000], "scheme": "blues"},
+          "title": "Price ($)",
+          "scale": {"domain": [400000, 2000000], "scheme": "greens"},
           "legend": {"format": ".2s"}
         },
         "tooltip": [
           {"field": "Suburb", "type": "nominal", "title": "Suburb"},
           {
             "field": "Price",
+            "aggregate": "median",
             "type": "quantitative",
             "title": "Median Price",
             "format": "$,.0f"
           }
         ]
+      }
+    },
+    {
+      "data": {
+        "values": [{"lon": 144.9623, "lat": -37.8124, "label": "Melbourne CBD"}]
+      },
+      "mark": {"type": "circle", "fill": "red", "size": 50},
+      "encoding": {
+        "longitude": {"field": "lon", "type": "quantitative"},
+        "latitude": {"field": "lat", "type": "quantitative"},
+        "tooltip": {"field": "label", "type": "nominal"}
       }
     }
   ],
