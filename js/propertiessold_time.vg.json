@@ -1,0 +1,84 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "width": "container",
+  "description": "Bar chart of the number of properties by month",
+  "data": {
+    "url": "https://raw.githubusercontent.com/ChrlWilko/VegaLight/main/melbourne_housing_refined.csv",
+    "format": {"type": "csv"}
+  },
+  "transform": [
+    {"calculate": "timeFormat(datum.Month, '%B')", "as": "Month_Name"},
+    {
+      "aggregate": [{"op": "count", "as": "count"}],
+      "groupby": ["Month", "Month_Name"]
+    }
+  ],
+  "encoding": {
+    "x": {
+      "field": "Month",
+      "type": "ordinal",
+      "axis": {"title": ""},
+      "sort": [
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December"
+      ]
+    },
+    "y": {
+      "field": "count",
+      "type": "quantitative",
+      "axis": {"title": "Number of Properties Sold"},
+      "scale": {"domain": [0, 1500]}
+    }
+  },
+  "layer": [
+    {
+      "mark": "line",
+      "encoding": {
+        "color": {"value": "black"},
+        "tooltip": [
+          {"field": "Month", "type": "ordinal", "title": "Month"},
+          {"field": "count", "type": "quantitative", "title": "Properties Sold"}
+        ]
+      }
+    },
+    {
+      "mark": "circle",
+      "encoding": {
+        "size": {"value": 100},
+        "color": {"value": "rgb(255, 0, 149)"},
+        "opacity": {"value": 1},
+        "tooltip": [
+          {"field": "Month", "type": "ordinal", "title": "Month"},
+          {"field": "count", "type": "quantitative", "title": "Properties Sold"}
+        ]
+      }
+    },
+    {
+      "mark": {
+        "type": "text",
+        "align": "left",
+        "baseline": "line-bottom",
+        "dx": 10,
+        "fontSize": 15,
+        "fontStyle": "italic"
+      },
+      "transform": [
+        {"filter": "datum.Month === 'May' || datum.Month === 'July'"}
+      ],
+      "encoding": {
+        "text": {"field": "Month", "type": "ordinal"},
+        "color": {"value": "rgb(255, 0, 149)"}
+      }
+    }
+  ]
+}

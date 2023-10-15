@@ -1,0 +1,207 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "description": "Two Charts Side by Side",
+  "width": 700,
+  "data": {
+    "url": "https://raw.githubusercontent.com/ChrlWilko/VegaLight/main/melbourne_housing_refined.csv",
+    "format": {"type": "csv"}
+  },
+  "transform": [
+    {"calculate": "floor(datum.YearBuilt / 10) * 10", "as": "Decade"},
+    {"filter": "Decade_selection == null || datum.Decade == Decade_selection"},
+    {"filter": "toDate(datum.Date)"},
+    {
+      "calculate": "format(datum.Distance, '.1f') + ' km'",
+      "as": "DistanceLabel"
+    }
+  ],
+  "params": [
+    {
+      "name": "Decade_selection",
+      "bind": {
+        "input": "select",
+        "options": [
+          null,
+          2010,
+          2000,
+          1990,
+          1980,
+          1970,
+          1960,
+          1950,
+          1940,
+          1930,
+          1920,
+          1910,
+          1900,
+          1890,
+          1880
+        ],
+        "labels": [
+          "Show All",
+          "2010's",
+          "2000's",
+          "1990's",
+          "1980's",
+          "1970's",
+          "1960's",
+          "1950's",
+          "1940's",
+          "1930's",
+          "1920's",
+          "1910's",
+          "1900's",
+          "1890's",
+          "1880's"
+        ],
+        "name": "Select Decade Property Built: "
+      }
+    }
+  ],
+  "hconcat": [
+    {
+      "width": 300,
+      "mark": "bar",
+      "selection": {
+        "type_highlight": {
+          "type": "multi",
+          "fields": ["Type"],
+          "bind": "legend"
+        }
+      },
+      "encoding": {
+        "y": {
+          "aggregate": "count",
+          "field": "Rooms",
+          "type": "quantitative",
+          "axis": {
+            "title": "Number of Properties",
+            "grid": false,
+            "format": "d"
+          }
+        },
+        "x": {
+          "field": "Rooms",
+          "type": "ordinal",
+          "axis": {
+            "title": "Bedrooms in Property",
+            "values": ["1", "2", "3", "4", "5", "6", "7", "8", "10"]
+          },
+          "sort": ["1", "2", "3", "4", "5", "6", "7", "8", "10"]
+        },
+        "color": {"field": "Type", "title": "Property Type", "type": "nominal"},
+        "opacity": {
+          "condition": {"selection": "type_highlight", "value": 1},
+          "value": 0.1
+        },
+        "tooltip": [
+          {"field": "Type", "title": "Property Type", "type": "nominal"},
+          {"field": "Rooms", "title": "Bedrooms", "type": "ordinal"},
+          {
+            "aggregate": "count",
+            "field": "Rooms",
+            "title": "Number of Properties",
+            "type": "nominal"
+          }
+        ]
+      }
+    },
+    {
+      "width": 300,
+      "encoding": {
+        "x": {
+          "field": "Distance",
+          "type": "quantitative",
+          "title": "Distance (km)"
+        },
+        "y": {
+          "field": "Price",
+          "type": "quantitative",
+          "aggregate": "median",
+          "axis": {"title": "Median Price ($)", "format": ".1s"}
+        }
+      },
+      "layer": [
+        {
+          "mark": {"type": "circle", "filled": true, "size": 60},
+          "selection": {
+            "type_highlight": {
+              "type": "multi",
+              "fields": ["Type"],
+              "bind": "legend"
+            }
+          },
+          "encoding": {
+            "size": {
+              "condition": {
+                "test": "datum.Suburb1 === 'Middle Park' && datum.Distance < 4 || datum['Suburb1'] == 'Clayton' ||datum['Suburb1'] == 'Gisborne'"
+              },
+              "value": 10
+            },
+            "color": {
+              "field": "Type",
+              "type": "nominal",
+              "title": "Property Type"
+            },
+            "opacity": {
+              "condition": {
+                "selection": "type_highlight",
+                "test": "indexof(['Clayton', 'Middle Park', 'Gisborne'], datum['Suburb1']) > -1",
+                "value": 1
+              },
+              "value": 0.1
+            },
+            "tooltip": [
+              {"field": "Suburb1", "type": "nominal", "title": "Suburb"},
+              {
+                "field": "DistanceLabel",
+                "title": "Distance",
+                "type": "nominal"
+              },
+              {
+                "field": "Price",
+                "type": "quantitative",
+                "aggregate": "median",
+                "title": "Median Price",
+                "format": "$,.0f"
+              },
+              {"field": "Type", "type": "nominal", "title": "Property Type"}
+            ]
+          }
+        },
+        {
+          "mark": {
+            "type": "text",
+            "align": "left",
+            "baseline": "middle",
+            "dx": 10,
+            "fontSize": 15,
+            "fontStyle": "italic"
+          },
+          "transform": [
+            {
+              "filter": "datum.Suburb1 === 'Middle Park' && datum.Distance < 4 || datum['Suburb1'] == 'Clayton' ||datum['Suburb1'] == 'Gisborne'"
+            }
+          ],
+          "encoding": {
+            "text": {"field": "Suburb1", "type": "nominal"},
+            "color": {"value": "black"},
+            "opacity": {
+              "condition": {
+                "test": "datum['Suburb1'] == 'Clayton' || datum['Suburb1'] == 'Middle Park' || datum['Suburb1'] == 'Gisborne'",
+                "value": 1
+              },
+              "value": 0
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "config": {
+    "legend": {
+      "orient": "top",  
+      "offset": 10      
+    }
+  }
+}

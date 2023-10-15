@@ -1,0 +1,87 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "width": "container",
+  "height": 300,
+  "description": "A scatter plot with tooltips",
+  "data": {
+    "url": "https://raw.githubusercontent.com/ChrlWilko/VegaLight/main/melbourne_housing_refined.csv",
+    "format": {"type": "csv"}
+  },
+  "transform": [
+    {"calculate": "floor(datum.YearBuilt / 10) * 10", "as": "Decade"},
+    {"filter": "Decade_selection == null || datum.Decade == Decade_selection"}
+  ],
+  "params": [
+    {
+      "name": "Decade_selection",
+      "bind": {
+        "input": "select",
+        "options": [
+          null,
+          2010,
+          2000,
+          1990,
+          1980,
+          1970,
+          1960,
+          1950,
+          1940,
+          1930,
+          1920,
+          1910,
+          1900,
+          1890,
+          1880
+        ],
+        "labels": [
+          "Show All",
+          "2010's",
+          "2000's",
+          "1990's",
+          "1980's",
+          "1970's",
+          "1960's",
+          "1950's",
+          "1940's",
+          "1930's",
+          "1920's",
+          "1910's",
+          "1900's",
+          "1890's",
+          "1880's"
+        ],
+        "name": "Select Decade Property Built: "
+      }
+    }
+  ],
+  "mark": "bar",
+  "encoding": {
+    "y": {
+      "aggregate": "count",
+      "field": "Rooms",
+      "type": "quantitative",
+      "axis": {"title": "Number of Properties", "grid": false, "format": "d"}
+    },
+    "x": {
+      "field": "Rooms",
+      "type": "ordinal",
+      "axis": {
+        "title": "Bedrooms in Property",
+        "values": ["1", "2", "3", "4", "5", "6", "7", "8", "10"]
+      },
+      "sort": ["1", "2", "3", "4", "5", "6", "7", "8", "10"]
+    },
+    "color": {"field": "Type", "title": "Property Type", "type": "nominal"},
+    "tooltip": [
+      {"field": "Type", "title": "Property Type", "type": "nominal"},
+      {"field": "Rooms", "title": "Bedrooms", "type": "ordinal"},
+      {
+        "aggregate": "count",
+        "field": "Rooms",
+        "title": "Number of Properties",
+        "type": "nominal"
+      }
+    ]
+  },
+  "config": {}
+}

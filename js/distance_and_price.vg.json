@@ -1,328 +1,95 @@
 {
-    "$schema": "https://vega.github.io/schema/vega/v5.json",
-    "description": "A scatter plot with tooltips",
-    "background": "white",
-    "padding": 5,
-    "width": 600,
-    "height": 450,
-    "style": "cell",
-    "data": [
-      {"name": "type_highlight_store"},
-      {
-        "name": "source_0",
-        "url": "https://raw.githubusercontent.com/ChrlWilko/VegaLight/main/melbourne_housing_refined.csv",
-        "format": {"type": "csv", "delimiter": ","},
-        "transform": [
-          {"type": "filter", "expr": "toDate(datum.Date)"},
-          {
-            "type": "formula",
-            "expr": "format(datum.Distance, '.1f') + ' km'",
-            "as": "DistanceLabel"
-          }
-        ]
-      },
-      {
-        "name": "data_0",
-        "source": "source_0",
-        "transform": [
-          {
-            "type": "aggregate",
-            "groupby": ["Distance", "Type", "Suburb", "DistanceLabel"],
-            "ops": ["average"],
-            "fields": ["Price"],
-            "as": ["average_Price"]
-          },
-          {
-            "type": "filter",
-            "expr": "isValid(datum[\"Distance\"]) && isFinite(+datum[\"Distance\"]) && isValid(datum[\"average_Price\"]) && isFinite(+datum[\"average_Price\"])"
-          }
-        ]
-      },
-      {
-        "name": "data_1",
-        "source": "source_0",
-        "transform": [
-          {
-            "type": "aggregate",
-            "groupby": ["Distance", "Suburb", "DistanceLabel", "Type"],
-            "ops": ["average"],
-            "fields": ["Price"],
-            "as": ["average_Price"]
-          },
-          {
-            "type": "filter",
-            "expr": "isValid(datum[\"Distance\"]) && isFinite(+datum[\"Distance\"]) && isValid(datum[\"average_Price\"]) && isFinite(+datum[\"average_Price\"])"
-          }
-        ]
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "width": "container",
+  "height": 300,
+  "description": "A scatter plot with tooltips",
+  "data": {
+    "url": "https://raw.githubusercontent.com/ChrlWilko/VegaLight/main/melbourne_housing_refined.csv"
+  },
+  "transform": [
+    {"filter": "toDate(datum.Date)"},
+    {
+      "calculate": "format(datum.Distance, '.1f') + ' km'",
+      "as": "DistanceLabel"
+    }
+  ],
+  "encoding": {
+    "x": {"field": "Distance", "type": "quantitative", "title": "Distance (km)"},
+    "y": {
+      "field": "Price", 
+      "type": "quantitative", 
+      "aggregate": "median",
+      "axis":{"title": "Median Price ($)","format": ".1s"}
       }
-    ],
-    "signals": [
-      {
-        "name": "unit",
-        "value": {},
-        "on": [
-          {"events": "mousemove", "update": "isTuple(group()) ? group() : unit"}
-        ]
-      },
-      {
-        "name": "type_highlight_Type_legend",
-        "value": null,
-        "on": [
-          {
-            "events": [
-              {
-                "source": "view",
-                "type": "click",
-                "markname": "Type_legend_symbols"
-              },
-              {
-                "source": "view",
-                "type": "click",
-                "markname": "Type_legend_labels"
-              },
-              {
-                "source": "view",
-                "type": "click",
-                "markname": "Type_legend_entries"
-              }
-            ],
-            "update": "isDefined(datum.value) ? datum.value : item().items[0].items[0].datum.value",
-            "force": true
-          },
-          {
-            "events": [{"source": "view", "type": "click"}],
-            "update": "!event.item || !datum ? null : type_highlight_Type_legend",
-            "force": true
-          }
-        ]
-      },
-      {
-        "name": "type_highlight",
-        "update": "vlSelectionResolve(\"type_highlight_store\", \"union\", true, true)"
-      },
-      {
-        "name": "type_highlight_tuple",
-        "update": "type_highlight_Type_legend !== null ? {fields: type_highlight_tuple_fields, values: [type_highlight_Type_legend]} : null"
-      },
-      {
-        "name": "type_highlight_tuple_fields",
-        "value": [{"type": "E", "field": "Type"}]
-      },
-      {
-        "name": "type_highlight_toggle",
-        "value": false,
-        "on": [
-          {
-            "events": {"merge": [{"source": "view", "type": "click"}]},
-            "update": "event.shiftKey"
-          }
-        ]
-      },
-      {
-        "name": "type_highlight_modify",
-        "on": [
-          {
-            "events": {"signal": "type_highlight_tuple"},
-            "update": "modify(\"type_highlight_store\", type_highlight_toggle ? null : type_highlight_tuple, type_highlight_toggle ? null : true, type_highlight_toggle ? type_highlight_tuple : null)"
-          }
-        ]
-      }
-    ],
-    "marks": [
-      {
-        "name": "layer_0_marks",
-        "type": "symbol",
-        "style": ["circle"],
-        "interactive": true,
-        "from": {"data": "data_0"},
-        "encode": {
-          "update": {
-            "size": [
-              {
-                "test": "datum['Suburb'] == 'Clayton' || datum['Suburb'] == 'Middle Park' || datum['Suburb'] == 'Gisborne'",
-                "value": 60
-              },
-              {"value": 10}
-            ],
-            "fill": {"scale": "color", "field": "Type"},
-            "opacity": [
-              {
-                "test": "!length(data(\"type_highlight_store\")) || vlSelectionTest(\"type_highlight_store\", datum)",
-                "value": 0.8
-              },
-              {"value": 0}
-            ],
-            "tooltip": {
-              "signal": "{\"Suburb\": isValid(datum[\"Suburb\"]) ? datum[\"Suburb\"] : \"\"+datum[\"Suburb\"], \"Distance\": isValid(datum[\"DistanceLabel\"]) ? datum[\"DistanceLabel\"] : \"\"+datum[\"DistanceLabel\"], \"Average of Price\": format(datum[\"average_Price\"], \"$,.0f\"), \"Type\": isValid(datum[\"Type\"]) ? datum[\"Type\"] : \"\"+datum[\"Type\"]}"
-            },
-            "ariaRoleDescription": {"value": "circle"},
-            "description": {
-              "signal": "\"Distance: \" + (format(datum[\"Distance\"], \"\")) + \"; Average of Price: \" + (format(datum[\"average_Price\"], \"\")) + \"; Type: \" + (isValid(datum[\"Type\"]) ? datum[\"Type\"] : \"\"+datum[\"Type\"]) + \"; Suburb: \" + (isValid(datum[\"Suburb\"]) ? datum[\"Suburb\"] : \"\"+datum[\"Suburb\"])"
-            },
-            "x": {"scale": "x", "field": "Distance"},
-            "y": {"scale": "y", "field": "average_Price"},
-            "shape": {"value": "circle"}
-          }
+  },
+  "layer": [
+    {
+      "mark": {"type": "circle", "filled": true, "size": 60},
+      "selection": {
+        "type_highlight": {
+          "type": "multi",
+          "fields": ["Type"],
+          "bind": "legend"
         }
       },
-      {
-        "name": "layer_1_marks",
+      
+      "encoding": {
+        "size": {
+          "condition": {
+            "test": "datum.Suburb1 === 'Middle Park' && datum.Distance < 4 || datum['Suburb1'] == 'Clayton' ||datum['Suburb1'] == 'Gisborne'"
+          },
+          "value": 10
+        },
+        "color": {"field": "Type", "type": "nominal", "title": "Property Type"},
+        "opacity": {
+          "condition": {
+            "selection": "type_highlight",
+            "test": "indexof(['Clayton', 'Middle Park', 'Gisborne'], datum['Suburb1']) > -1",
+            "value": 1
+          },
+          "value": 0.1
+        },
+        "tooltip": [
+          {"field": "Suburb1", "type": "nominal", "title": "Suburb"},
+          {"field": "DistanceLabel", "title": "Distance", "type": "nominal"},
+          {
+            "field": "Price",
+            "type": "quantitative",
+            "aggregate": "median",
+            "title": "Median Price",
+            "format": "$,.0f"
+          },
+          {"field": "Type", "type": "nominal", "title": "Property Type"}
+        ]
+      }
+    },
+    {
+      "mark": {
         "type": "text",
-        "style": ["text"],
-        "interactive": true,
-        "from": {"data": "data_1"},
-        "encode": {
-          "update": {
-            "align": {"value": "left"},
-            "baseline": {"value": "line-bottom"},
-            "dx": {"value": 10},
-            "fontSize": {"value": 15},
-            "fontStyle": {"value": "italic"},
-            "fill": {"value": "black"},
-            "opacity": [
-              {
-                "test": "datum['Suburb'] == 'Clayton' || datum['Suburb'] == 'Middle Park' || datum['Suburb'] == 'Gisborne'",
-                "value": 0.8
-              },
-              {"value": 0}
-            ],
-            "tooltip": {
-              "signal": "{\"Suburb\": isValid(datum[\"Suburb\"]) ? datum[\"Suburb\"] : \"\"+datum[\"Suburb\"], \"Distance\": isValid(datum[\"DistanceLabel\"]) ? datum[\"DistanceLabel\"] : \"\"+datum[\"DistanceLabel\"], \"Average of Price\": format(datum[\"average_Price\"], \"$,.0f\"), \"Unit Type\": isValid(datum[\"Type\"]) ? datum[\"Type\"] : \"\"+datum[\"Type\"]}"
-            },
-            "description": {
-              "signal": "\"Distance: \" + (format(datum[\"Distance\"], \"\")) + \"; Average of Price: \" + (format(datum[\"average_Price\"], \"\")) + \"; Suburb: \" + (isValid(datum[\"Suburb\"]) ? datum[\"Suburb\"] : \"\"+datum[\"Suburb\"]) + \"; Unit Type: \" + (isValid(datum[\"Type\"]) ? datum[\"Type\"] : \"\"+datum[\"Type\"])"
-            },
-            "x": {"scale": "x", "field": "Distance"},
-            "y": {"scale": "y", "field": "average_Price"},
-            "text": {
-              "signal": "isValid(datum[\"Suburb\"]) ? datum[\"Suburb\"] : \"\"+datum[\"Suburb\"]"
-            }
-          }
+        "align": "left",
+        "baseline": "middle",
+        "dx": 10,
+        "dy": -10,
+        "fontSize": 15,
+        "fontStyle": "italic"
+      },
+      "transform": [{
+            "filter": "datum.Suburb1 === 'Middle Park' && datum.Distance < 4 || datum['Suburb1'] == 'Clayton' ||datum['Suburb1'] == 'Gisborne'" 
+      }
+      ],
+      "encoding": {
+        "text": {"field": "Suburb1", "type": "nominal"},
+        "color": {"value": "black"},
+        "opacity": {
+          "condition": {
+            "test":
+              "datum['Suburb1'] == 'Clayton' || datum['Suburb1'] == 'Middle Park' || datum['Suburb1'] == 'Gisborne'",
+            "value": 0.8
+          },
+          "value": 0
         }
       }
-    ],
-    "scales": [
-      {
-        "name": "x",
-        "type": "linear",
-        "domain": {
-          "fields": [
-            {"data": "data_0", "field": "Distance"},
-            {"data": "data_1", "field": "Distance"}
-          ]
-        },
-        "range": [0, {"signal": "width"}],
-        "nice": true,
-        "zero": true
-      },
-      {
-        "name": "y",
-        "type": "linear",
-        "domain": {
-          "fields": [
-            {"data": "data_0", "field": "average_Price"},
-            {"data": "data_1", "field": "average_Price"}
-          ]
-        },
-        "range": [{"signal": "height"}, 0],
-        "nice": true,
-        "zero": true
-      },
-      {
-        "name": "color",
-        "type": "ordinal",
-        "domain": {"data": "data_0", "field": "Type", "sort": true},
-        "range": "category"
-      }
-    ],
-    "axes": [
-      {
-        "scale": "x",
-        "orient": "bottom",
-        "gridScale": "y",
-        "grid": true,
-        "tickCount": {"signal": "ceil(width/40)"},
-        "domain": false,
-        "labels": false,
-        "aria": false,
-        "maxExtent": 0,
-        "minExtent": 0,
-        "ticks": false,
-        "zindex": 0
-      },
-      {
-        "scale": "y",
-        "orient": "left",
-        "gridScale": "x",
-        "grid": true,
-        "tickCount": {"signal": "ceil(height/40)"},
-        "domain": false,
-        "labels": false,
-        "aria": false,
-        "maxExtent": 0,
-        "minExtent": 0,
-        "ticks": false,
-        "zindex": 0
-      },
-      {
-        "scale": "x",
-        "orient": "bottom",
-        "grid": false,
-        "title": "Distance",
-        "labelFlush": true,
-        "labelOverlap": true,
-        "tickCount": {"signal": "ceil(width/40)"},
-        "zindex": 0
-      },
-      {
-        "scale": "y",
-        "orient": "left",
-        "grid": false,
-        "title": "Average of Price",
-        "labelOverlap": true,
-        "tickCount": {"signal": "ceil(height/40)"},
-        "zindex": 0
-      }
-    ],
-    "legends": [
-      {
-        "fill": "color",
-        "symbolType": "circle",
-        "title": "Type",
-        "encode": {
-          "labels": {
-            "name": "Type_legend_labels",
-            "interactive": true,
-            "update": {
-              "opacity": [
-                {
-                  "test": "(!length(data(\"type_highlight_store\")) || (type_highlight[\"Type\"] && indexof(type_highlight[\"Type\"], datum.value) >= 0))",
-                  "value": 1
-                },
-                {"value": 0.35}
-              ]
-            }
-          },
-          "symbols": {
-            "name": "Type_legend_symbols",
-            "interactive": true,
-            "update": {
-              "opacity": [
-                {
-                  "test": "(!length(data(\"type_highlight_store\")) || (type_highlight[\"Type\"] && indexof(type_highlight[\"Type\"], datum.value) >= 0))",
-                  "value": 0.8
-                },
-                {"value": 0.35}
-              ]
-            }
-          },
-          "entries": {
-            "name": "Type_legend_entries",
-            "interactive": true,
-            "update": {"fill": {"value": "transparent"}}
-          }
-        }
-      }
-    ],
-    "config": {}
-  }
+    }
+  ],
+  "config": {}
+}
