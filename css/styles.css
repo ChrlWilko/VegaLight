@@ -1,26 +1,71 @@
+.page {
+    width: auto;
+    background-color: white;
+    margin-left: 15%;
+    margin-right: 15%;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    padding: 50px;
+    padding-top: 35px;
+    border-radius: 10px;
+    border: 4px;
+    border-color: rgb(38, 70, 71);
+    border-style: solid;
+}
+
+.refrences {
+    width: auto;
+    background-color: white;
+    margin-left: 15%;
+    margin-right: 15%;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    padding: 50px;
+    padding-top: 15px;
+    padding-bottom: 15px;
+    border-radius: 10px;
+    border: 4px;
+    border-color: rgb(38, 70, 71);
+    border-style: solid;
+}
 
 body{
-    background-color: burlywood;
+    font-family: 'Mukta', sans-serif;
 }
 
-h1{
-    text-align: center;
-    color: cadetblue;
+h1 {
+    text-align: left;
+    color: black;
+    margin: 0;
+    font-family: 'Young Serif', serif;
 }
 
-.container {
-    margin: 20px;
-    margin-left: auto;
-    margin-right: auto;
-    text-align: center;
-    object-fit: cover;
+h2 {
+    text-align: left;
+    color: black;
+    margin: 0;
+    margin-left: 10px;
+    margin-right: 10px;
 }
 
-.graph {
-    margin: 0 auto;
-    width: fit-content;
-    height: fit-content;
+h3 {
+    text-align: left;
+    color: rgb(66, 66, 66);
+    margin: 0;
+}
+
+h5{
+    margin-top: 0px;
+    margin-bottom: 70px;
+}
+
+p {
+    margin-top: 20px;
+    font-size: medium;
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+.center{
     text-align: center;
-    background-color: cadetblue;
-    padding: 20px;
 }
